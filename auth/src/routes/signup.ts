@@ -17,11 +17,6 @@ router.post(
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        // throw errors.array() buda bir yontem
-        // const error  = new Error("Invalid email or password");
-        //  error.reasons = errors.array();  js dunyasında boyle atama yapardık ama ts dunyasında  RequestValidationError dıye bır class olusturduk.
-        //throw error
-
         throw new RequestValidationError(errors.array());
       }
       res.send({ msg: "ok" });
@@ -30,5 +25,5 @@ router.post(
     }
   }
 );
-
+// auth klasorumuz ıcın auth deployment k8s objemız var bunun ıcınde mongo db user collectıon'ımız olacak
 export { router as signupRouter };
