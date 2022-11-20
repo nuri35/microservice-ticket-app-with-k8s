@@ -1,6 +1,6 @@
 import express from "express";
 import { json } from "body-parser";
-
+require('express-async-errors');
 import { currentUserRouter } from "./routes/current-user";
 import { signinRouter } from "./routes/signin";
 import { signoutRouter } from "./routes/signout";
@@ -16,8 +16,20 @@ app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
 
-// rout'larda hic birisini bulamazsa burası calısacaktır.
-app.get('*',()=>{
+// patch post vs ıstekler ııcınde not found error yapımız gecerlı olacaktır
+// app.all('*',()=>{
+//   throw new NotFoundError()
+// })
+// buda geçerli all gibi patch post ısteklerı ıcınde not found error tıpımız gecerlı olacaktır.
+// app.use((req, res, next) => {
+//   throw new NotFoundError()
+// }); bunlar çalışır fakat async fonksıyonlu ypacaksak şu skeılde
+
+// app.all('*',async(req,res,next)=>{
+// next(new NotFoundError())
+// }) bu async'li kullanıp throw seklınde kullanmak ıstedıgımızde next anahtar fonskıyonunu kullanmak ıstemessek tabı farklı yapmamız gerekecetır. tabıkıde express async-error dıye bır kutuphaneyı kullancagız bu paket sayesınde async fonkyıonlarda throw kullanbılrız
+
+app.all('*',async(req,res)=>{ // 
   throw new NotFoundError()
 })
 
