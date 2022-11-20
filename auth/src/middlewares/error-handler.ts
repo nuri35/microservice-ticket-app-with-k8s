@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { DatabaseConnectionError } from "../errors/database-connection-error";
-import { RequestValidationError } from "../errors/request-validation-error";
+import { CustomError } from "../errors/custom-error";
 
 export const errorHandler = (
   err: Error,
@@ -8,18 +7,13 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  if(err instanceof RequestValidationError){
-    const formattedErrors = err.errors.map(error => {
-      return {message : error.msg,field: error.param} 
-    });
-    return res.status(400).send({errors:formattedErrors})
+  // not : db-connectıon yada request-validation-errors'a baktıgımızda abstract extends ettık yanı onun ozerllıklerını kullanabılrız tabı class dolayısıyla tıp atamasıda olmuş oldu onu cagırdıgımızda abstract'dakıleri karsılaması lazım 2 error tip'de CustomError abstract turunde  1 tane error tipını kullnarak throw ettık ve sımdı buraya duştu mıddleweare'a yanı burdada sadece (err instanceof CustomError) seklınde kontrol yapmamız yeterlı. hangısıysede onun serıalizeError'unu kullancak.
+  if(err instanceof CustomError){
+    return res.status(err.statusCode).send({errors:err.serializeErrors()})
   }
 
-  if(err instanceof DatabaseConnectionError){
-
-  }
-
+  //genel olarak aynı tıpte butun hatalar ıncelendıgınde errors[{message:bla bla}] seklınde
   res.status(400).send({
-    message: err,
+    errors:[{message:'Something went wrong'}]
   });
 };
