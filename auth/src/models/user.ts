@@ -5,6 +5,16 @@ interface UserAttrs {
     password: string
 }
 
+interface UserModel extends mongoose.Model<UserDoc>{
+    build(attrs: UserAttrs): UserDoc
+}
+
+// bu sekılde yapıldıgında new user'a yenı bır value objeye ekleyemezsın. bırde new user create edıltıkten sonra createdAt gıbı şeyler eklıyor bunu ıstemeyebılrıız. bunu nasıl çözecegız bunun ıcın ınterface UserDoc'u takıp et
+
+interface UserDoc extends mongoose.Document {
+    email: string;
+    password: string;
+}
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -18,17 +28,14 @@ const userSchema = new mongoose.Schema({
 })
 
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
 
-const buildUser = (attrs: UserAttrs)=>{
+userSchema.statics.build = (attrs: UserAttrs)=>{
     return new User(attrs)
-} // save ederken buildUser fonksıyonunu kullancaz sonra return eden objeyı .save dıyecegız burda amacımız obje olsuturken typescriptın anlayacagı tıpleme olsun baska bırşey eklersek bıze kızsın dıye böyle bir yola gıttık. yoksa save etmeden once typescrpt anlamıyor umrunda olmuyor
+}
 
-// buildUser(
-//     {
-//         email:"saasas", password: "as",
-//         sdsdsd:122121
-//     }
-//     ) işte kızıyor......
+
+
 
 export {User}
+
