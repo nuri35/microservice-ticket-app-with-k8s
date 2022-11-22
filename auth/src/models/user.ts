@@ -9,7 +9,6 @@ interface UserModel extends mongoose.Model<UserDoc>{
     build(attrs: UserAttrs): UserDoc
 }
 
-// bu sekılde yapıldıgında new user'a yenı bır value objeye ekleyemezsın. bırde new user create edıltıkten sonra createdAt gıbı şeyler eklıyor bunu ıstemeyebılrıız. bunu nasıl çözecegız bunun ıcın ınterface UserDoc'u takıp et
 
 interface UserDoc extends mongoose.Document {
     email: string;
@@ -26,16 +25,16 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 })
-
-
-const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
-
 userSchema.statics.build = (attrs: UserAttrs)=>{
     return new User(attrs)
 }
+
+const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
+
 
 
 
 
 export {User}
 
+// ders 161 de kaldın
