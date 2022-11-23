@@ -18,4 +18,3 @@ export class Password {
     }
 }
 
-// ders 167'de kaldın

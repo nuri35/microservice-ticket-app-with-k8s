@@ -29,7 +29,7 @@ router.post(
       }
       // yazdıgımız kendi build fonksıyonumuuz kullanıyoruz.user model bkz.
       const user = User.build({email, password})
-      await user.save()
+      await user.save() // userSchema.pre trıgger oluyor.
 
       res.status(201).send(user)
 
