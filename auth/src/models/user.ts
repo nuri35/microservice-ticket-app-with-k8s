@@ -49,4 +49,3 @@ const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
 
 export {User}
 
-//ders 173 desin
