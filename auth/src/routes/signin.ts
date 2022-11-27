@@ -47,7 +47,7 @@ router.post(
     // Store it on session object
     req.session = {
       jwt: userJwt,
-    };
+    }; // cokie-session kullanıyoruz jwt'ımız cookielede barınmaktadır.
 
     res.status(200).send(existingUser);
   }
