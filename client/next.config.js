@@ -9,4 +9,3 @@ const nextConfig = {
 module.exports = nextConfig;
 
 
-// 223.dersi sabah yendıen dınle ıng altyazılıda ıncele 

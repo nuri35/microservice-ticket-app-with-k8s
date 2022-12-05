@@ -1,5 +1,3 @@
 export default () => {
-    return <div>Welcome to Next.j2s!</div>
-  }
-  
- 
+  return <h1>Welcome to Next word for Next js !!asas!!</h1>;
+};
