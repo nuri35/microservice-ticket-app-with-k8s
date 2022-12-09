@@ -1,9 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
+import Router from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Button, message, Space } from "antd";
+import useRequest from "../../hooks/use-request";
 
 const schema = yup
   .object({
@@ -24,26 +24,20 @@ export default () => {
     resolver: yupResolver(schema),
   });
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [bodyData, setBodyData] = useState();
 
-  const errorMsgFn = (msg) => {
-    messageApi.open({
-      type: "error",
-      content: msg,
-    });
-  };
+  const { doRequest, contextHolder } = useRequest({
+    url: "/api/users/signup",
+    method: "post",
+    body: bodyData,
+  });
 
   const onSubmit = async (data) => {
-    try {
-      const response = await axios.post("/api/users/signup", data);
-      console.log(response.data);
-    } catch (error) {
-      if (error.response.status === 400) {
-        errorMsgFn(error.response.data.errors[0].message); // şimdilik böyle proje cesıtlendıkce array'i dönmek ıcın dusunuruz.
-      }
-    }
+    setBodyData(data);
+    doRequest();
+    // Router.push("/"); burda kaldın bunu dusun yarın eğer basarılıysa router ıslemı yapsın zaten vıdeoda ızle 1.dkda
   };
-
+  // ders 231 kaldın
   return (
     <>
       {contextHolder}
@@ -56,7 +50,7 @@ export default () => {
         </div>
 
         <div>
-          <p>{errors.email?.message}</p>
+          <p className="text=primary">{errors.email?.message}</p>
         </div>
 
         <div className="form-group">
@@ -69,7 +63,7 @@ export default () => {
         </div>
 
         <div>
-          <p>{errors.password?.message}</p>
+          <p className="text=danger">{errors.password?.message}</p>
         </div>
 
         <button className="btn btn-primary">Sign Up</button>
