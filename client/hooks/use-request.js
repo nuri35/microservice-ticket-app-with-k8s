@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Button, message, Space } from "antd";
 
-export default ({ url, method, body }) => {
+export default ({ url, method, body, onSuccess }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const msgFn = (typeMsg, msg) => {
@@ -16,7 +16,10 @@ export default ({ url, method, body }) => {
     try {
       //  axios[method] burası axios.post gıbı dusunebılrsın
       const response = await axios[method](url, body);
-      msgFn("success", "Successfuly Registered");
+      if (onSuccess) {
+        onSuccess();
+      }
+
       return response.data;
     } catch (error) {
       if (error.response.status === 400) {

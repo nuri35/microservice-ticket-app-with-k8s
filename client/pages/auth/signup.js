@@ -30,14 +30,15 @@ export default () => {
     url: "/api/users/signup",
     method: "post",
     body: bodyData,
+    onSuccess: () => Router.push("/"), // en son bır hata cıkmassa
   });
 
   const onSubmit = async (data) => {
     setBodyData(data);
+
     doRequest();
-    // Router.push("/"); burda kaldın bunu dusun yarın eğer basarılıysa router ıslemı yapsın zaten vıdeoda ızle 1.dkda
   };
-  // ders 231 kaldın
+
   return (
     <>
       {contextHolder}

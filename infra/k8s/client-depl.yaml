@@ -15,7 +15,7 @@ spec:
       containers:
         - name: client
           image: nurettinsenbackend/client-next
-
+          
 ---
 apiVersion: v1
 kind: Service
