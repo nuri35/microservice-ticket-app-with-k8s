@@ -9,5 +9,17 @@ const color: Color = {
 };
 
 console.log(color);
+console.log("====================================");
 
-export default color;
+console.log("====================================");
+("hello word");
+
+const otherColor: Color = {
+  red: 30,
+  blue: 111,
+};
+
+export default {
+  color,
+  otherColor,
+};
