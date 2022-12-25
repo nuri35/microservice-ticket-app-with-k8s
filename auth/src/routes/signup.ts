@@ -1,9 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import { body } from "express-validator";
-import { BadRequestError } from "../errors/bad-request-error";
+import { validateRequest, BadRequestError } from "@fbticketss/common";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user";
-import { validateRequest } from "../middlewares/validate-request";
 
 const router = express.Router();
 
@@ -19,7 +18,6 @@ router.post(
   validateRequest, // midlleweare olarak kullanıyoruz
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-     
       const { email, password } = req.body;
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -29,16 +27,17 @@ router.post(
       const user = User.build({ email, password });
       await user.save(); // userSchema.pre trıgger oluyor.
 
-     
-
-      const userJwt = jwt.sign({
-        id: user.id,
-        email: user.email,
-      },process.env.JWT_KEY!); // unlem ısaretıyle typescrpte dıyoruz endıselenme bunu kontrol edıyoruz zaten
+      const userJwt = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        process.env.JWT_KEY!
+      ); // unlem ısaretıyle typescrpte dıyoruz endıselenme bunu kontrol edıyoruz zaten
 
       req.session = {
-        jwt: userJwt
-      }
+        jwt: userJwt,
+      };
 
       res.status(201).send(user);
     } catch (err) {
