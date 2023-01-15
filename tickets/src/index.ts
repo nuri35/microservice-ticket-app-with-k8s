@@ -7,6 +7,7 @@ import { errorHandler, NotFoundError, currentUser } from "@fbticketss/common";
 import { createTicketRouter } from "./routes/new";
 import { showTicketRouter } from "./routes/show";
 import { updateTicketRouter } from "./routes/update";
+import { natsWrapper } from "./nats-wrapper";
 
 const app = express();
 app.set("trust proxy", true);
@@ -38,6 +39,16 @@ const start = async () => {
     throw new Error("MONGO_URI must be defined");
   }
   try {
+    await natsWrapper.connect("ticketing", "abc", "http://nats-srv:4222");
+
+    natsWrapper.client.on("close", () => {
+      console.log("Nats conection closed");
+      process.exit();
+    });
+
+    process.on("SIGINT", () => natsWrapper.client.close());
+    process.on("SIGTERM", () => natsWrapper.client.close());
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log("connect success to database");
   } catch (err) {

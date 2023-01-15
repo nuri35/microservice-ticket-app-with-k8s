@@ -15,11 +15,19 @@ spec:
       containers:
         - name: tickets
           image: nurettinsenbackend/tickets
-          env: 
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name # tıcket servıce calıstırmak ıcın pod olusturdugumuzda burada k8s pods adına bakacak onu koyacak buraya. bızde bu evn'yi uygulamada kod ıcınde  nats clientId optınal parametresınde kullncagız
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
             - name: MONGO_URI
-              value: 'mongodb://tickets-mongo-srv:27017/tickets'
+              value: "mongodb://tickets-mongo-srv:27017/tickets"
             - name: JWT_KEY
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
