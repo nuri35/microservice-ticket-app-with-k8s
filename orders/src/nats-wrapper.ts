@@ -3,8 +3,6 @@ import nats, { Stan } from "node-nats-streaming";
 class NatsWrapper {
   private _client?: Stan;
 
-  // mongodakı connect gibi burda await diyebilmek adına new promıse kullanıcagız. fonskıyon ıcınde
-
   get client() {
     if (!this._client) {
       throw new Error("Cannot access Nats client before connecting");
@@ -20,7 +18,7 @@ class NatsWrapper {
         console.log("Connected to Nats");
         resolve();
       });
-      // this.client olan get olan cagırıyoruz oda this._client ı dondurur.
+
       this.client!.on("error", (err) => {
         reject(err);
       });
