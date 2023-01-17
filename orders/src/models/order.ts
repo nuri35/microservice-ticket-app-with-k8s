@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { OrderStatus } from "@fbticketss/common";
+import { TicketDoc } from "./ticket";
 
 interface OrderAttrs {
   userId: string;
@@ -27,6 +29,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.Created,
     },
     expiresAt: {
       type: mongoose.Schema.Types.Date,
@@ -51,3 +55,5 @@ orderSchema.statics.build = (attrs: OrderAttrs) => {
 
 const Order = mongoose.model<OrderDoc, OrderModel>("Order", orderSchema);
 // export ettgımız bu Order'ı Order.build dedıgımızde   orderSchema.statics.build dakı calısacak cunku   mongoose.model<OrderDoc, OrderModel> yaptık. OrderModel extends seklınde bırşey yazdık bızım yazdgımız build'dede ulaşabırız artık nasıl ulaşabıldık cunku   mongoose.model<OrderDoc, OrderModel> bunu yazdgımız ıcın  ayrıca yazdıımgız fonksıyon cagırdıgımzıda OrderModel dekı tanımladıgımız fonksıyonu calsır oda bıze zaten orderDoc dondurur. yanı nokta dııyp yenı bırşey ekletmez.
+
+export { Order };
