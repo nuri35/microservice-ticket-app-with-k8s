@@ -3,6 +3,7 @@ import { OrderStatus } from "@fbticketss/common";
 import { Order } from "./order";
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
@@ -32,14 +33,19 @@ const ticketSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        (ret.id = ret._id), delete ret._id;
+        ret.id = ret._id;
+        delete ret._id;
       },
     },
   }
 );
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  });
 };
 
 ticketSchema.statics.isReserved = async function () {
@@ -56,6 +62,6 @@ ticketSchema.statics.isReserved = async function () {
   return !!existingOrder; // ya donen datayı verıcektır yada null dondurcektır
 };
 
-const Ticket = mongoose.model<TicketDoc, TicketModel>("Order", ticketSchema);
+const Ticket = mongoose.model<TicketDoc, TicketModel>("Ticket", ticketSchema);
 
 export { Ticket };

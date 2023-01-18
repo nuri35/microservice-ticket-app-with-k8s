@@ -40,5 +40,3 @@ router.delete(
 );
 
 export { router as deleteOrderRouter };
-
-// 392.dersde kaldın
