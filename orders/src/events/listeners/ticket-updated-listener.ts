@@ -8,7 +8,10 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
   queueGroupName = queueGroupName;
 
   async onMessage(data: TicketUpdatedEvent["data"], msg: Message) {
-    const ticket = await Ticket.findById(data.id);
+    const ticket = await Ticket.findById({
+      _id: data.id,
+      version: data.version - 1, // version her kaydetgımızde artıyor yada update ettıgımzıde order'da ticket schemasında version 1 okey . update edecek olan datanın versionun bir eksisi  listenerdakı ticket versionnu ile eşleşiyorsa sırada demek o varmış diye ekleyecek update işlemını
+    });
 
     if (!ticket) {
       throw new Error("Ticket not found");
@@ -16,7 +19,7 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
 
     const { title, price } = data;
     ticket.set({ title, price });
-    await ticket.save();
+    await ticket.save(); // save ederkende ticketSchema.plugin(updateIfCurrentPlugin); sayesınde  data.version 2ydi ona eşitlıyor ilgili datanın versionnunu update etti save etti 1'den artık 2 oldu
 
     msg.ack();
   }
