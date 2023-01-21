@@ -19,7 +19,15 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     // orderId boş olabilir. eger sııparıs verıldıyse tıcket'dakı orderId alanını dolduruyoruz burda ozman orderıd boş olmayacaktır.
     ticket.set({ orderId: data.id });
     await ticket.save();
-    new TicketUpdatedPublisher(natsWrapper.client);
+    // bu publısh olayını bır router servıce ıcersınde yaparken bır lıstener event ıcındede yapılabılır. bu tıcketupdated channel yanı subject uzerınden gıttıgı ıcın orders'da da boyle bır lıstener var orda yakalar ve update işlemı yapar order'dada
+    new TicketUpdatedPublisher(this.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      orderId: ticket.orderId,
+      version: ticket.version,
+    });
 
     msg.ack();
   }
