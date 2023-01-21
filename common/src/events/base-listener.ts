@@ -12,7 +12,7 @@ export abstract class Listener<T extends Event> {
   abstract onMessage(data: T["data"], msg: Message): void;
   protected ackWait = 5 * 1000; // private gibi dışardan ulaşamayız ister bu abstract yerıne normal class olsun bu class'ı new dıye cagır sonra ulaş istersen bu abstract yada class olsun subsclass'a extend ettıkten sonra subclass'ı cagırarak dışardan ulaş ulaşamazsın prıvate gibi . fakat private'den farklı olarak bu subclass içerisinde kullanablrsın fakat private yaptıgında sadece ana class'ın ıcerısnıde kullanabılrsın.
 
-  constructor(private client: Stan) {
+  constructor(protected client: Stan) {
     this.client = client;
   }
 

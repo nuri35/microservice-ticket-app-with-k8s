@@ -10,13 +10,11 @@ const loginUser = async () => {
   const val = response.headers["set-cookie"].pop().split(";")[0];
 
   (async () => {
-    for (let i = 0; i < 600; i++) {
+    for (let i = 0; i < 400; i++) {
       doRequest(val);
     }
   })();
 };
-
-loginUser();
 
 const doRequest = async (cookie) => {
   const { data } = await axios.post(
@@ -43,3 +41,5 @@ const doRequest = async (cookie) => {
     }
   );
 };
+
+loginUser();

@@ -61,7 +61,7 @@ router.post(
         id: ticket.id,
         price: ticket.price,
       },
-    });
+    }); // bu publısh channel uzerınden hem payment servıce lıstener olarak dınlıcek hemde tıcket servıce dınlıcek
 
     // publish an event saying that an order was created
     res.status(201).send(order);

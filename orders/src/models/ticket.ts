@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { OrderStatus } from "@fbticketss/common";
 import { Order } from "./order";
-import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
   id: string;
@@ -18,6 +17,10 @@ export interface TicketDoc extends mongoose.Document {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -43,7 +46,21 @@ const ticketSchema = new mongoose.Schema(
 );
 
 ticketSchema.set("versionKey", "version");
-ticketSchema.plugin(updateIfCurrentPlugin);
+
+// burdan versıonlama olayını kaldırdık bir arttırıyordu bunu yanı updateIfCurrentPlugin. onun yerıne zaten tıcket created lıstener'da default versıon 0 olacak. update lıstener'da ıse tıcket'an gelen versıon datasını kaydedıoruz. burda yenıden plugın kullanmıyoruz. update veya tıcker lıstenerdada en son save trıgger oldugunda bu fonksıyon calısacaktır. burdada plugın kullansak belkı farklı verıtabanıdır farklı versıonlama yapabılır onun ıcın böyle tıckets publisher'ına  baglı kalarak ordan gelen datayı update listener'ında kullanıyoruz.
+ticketSchema.pre("save", function (done) {
+  this.$where = {
+    version: this.get("version") - 1,
+  };
+  done();
+});
+
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  }); // version her kaydetgımızde artıyor yada update ettıgımzıde order'da ticket schemasında version 1 okey . update edecek olan datanın versionun bir eksisi  listenerdakı ticket versionnu ile eşleşiyorsa sırada demek o varmış diye ekleyecek update işlemını
+};
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({
