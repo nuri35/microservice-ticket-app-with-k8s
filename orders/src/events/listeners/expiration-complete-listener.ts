@@ -7,6 +7,8 @@ import {
 } from "@fbticketss/common";
 import { Order } from "../../models/order";
 import { queueGroupName } from "./queue-group-name";
+import { natsWrapper } from "../../nats-wrapper";
+import { OrderCancelledPublisher } from "../publishers/order-cancelled-publisher";
 
 //boyle bır lıstener olmalıkı order'da expire oldugunda verılen sure kadar daha sorna burda order'ın statusunu cancelled yapıcaz daha sonra  order:cancelled dıye publish edecegız
 export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent> {
@@ -20,8 +22,15 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     }
     order.set({
       status: OrderStatus.Cancelled,
-      ticket: null, // cancel oldugu ıcın tıcket'da null yanı tıcket alanı yok order'da demek
-    });
+    }); // cancelled'a daır publısh event yayacagız
+    await order.save();
+    new OrderCancelledPublisher(this.client).publish({
+      id: order.id,
+      version: order.version,
+      ticket: {
+        id: order.ticket.id,
+      },
+    }); // bu publısh ettıgımızde event yayıyoruz. listener olarak tıcket dınlıyor.  cunku başkası tıcket'ı satın alabılır bılgı verıyoruz artık bu cancelled durumda baska alabılır yanı
     msg.ack();
   }
 }
