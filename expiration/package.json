@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fbticketss/common": "^1.0.21",
+    "@fbticketss/common": "^1.0.22",
     "@types/bull": "^4.10.0",
     "bull": "^4.10.2",
     "ts-node-dev": "^2.0.0",
