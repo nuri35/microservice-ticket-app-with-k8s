@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { OrderStatus } from "@fbticketss/common";
-import { Order } from "./order";
+import { Order, OrderStatus } from "./order";
 
 interface TicketAttrs {
   id: string;
@@ -72,7 +71,7 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
 
 ticketSchema.statics.isReserved = async function () {
   const existingOrder = await Order.findOne({
-    ticket: this,
+    ticket: this as any,
     status: {
       $in: [
         OrderStatus.Created,

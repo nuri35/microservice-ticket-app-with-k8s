@@ -30,16 +30,20 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
+
     const ticket = await Ticket.findById(ticketId);
+
     if (!ticket) {
       throw new NotFoundError();
     }
-
+    console.log("sa");
     const isReserved = await ticket.isReserved();
-
+    console.log(isReserved);
+    console.log("sxxxa");
     if (isReserved) {
       throw new BadRequestError("Ticket is already reserved");
     }
+
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS); // set 15 dakıka
 
@@ -51,6 +55,7 @@ router.post(
     });
 
     await order.save();
+
     await new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
       version: order.version,

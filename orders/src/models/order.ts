@@ -3,6 +3,8 @@ import { OrderStatus } from "@fbticketss/common";
 import { TicketDoc } from "./ticket";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
+export { OrderStatus };
+
 interface OrderAttrs {
   userId: string;
   status: OrderStatus;
