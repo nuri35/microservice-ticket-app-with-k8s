@@ -16,11 +16,12 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
   queueGroupName = queueGroupName;
 
   async onMessage(data: ExpirationCompleteEvent["data"], msg: Message) {
-    const order = await Order.findById(data.orderId);
+    const order = await Order.findById(data.orderId).populate("ticket");
     if (!order) {
       throw new Error("Order not found");
     }
     order.set({
+      // burda 1 dakıka sonra gelıyor lıstenera olay ama burda odemesını yapmıssa cancelled'a cekmıcez ??? yapılcak payment servıce'den sonra
       status: OrderStatus.Cancelled,
     }); // cancelled'a daır publısh event yayacagız
     await order.save();
@@ -34,3 +35,5 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     msg.ack();
   }
 }
+
+// herşeyı anladın payment servıce kaldı yarın devam et ona 462.dersdesın
