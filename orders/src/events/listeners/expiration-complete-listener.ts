@@ -35,5 +35,3 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     msg.ack();
   }
 }
-
-// herşeyı anladın payment servıce kaldı yarın devam et ona 462.dersdesın
