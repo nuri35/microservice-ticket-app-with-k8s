@@ -1,7 +1,7 @@
 import { OrderStatus } from "@fbticketss/common";
 import mongoose from "mongoose";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
-
+// unutma bu models'dekıler schema yanı tablo gıbı dusunebılrısn asıl bız payment başkarken payment dıye bir database oluşturuluyor bu module özel onun ıcınde bu moedls'dekı schemalar yanı tablolar
 interface OrderAttrs {
   id: string;
   version: number;

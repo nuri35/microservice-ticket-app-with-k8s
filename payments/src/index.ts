@@ -4,8 +4,10 @@ require("express-async-errors");
 import mongoose from "mongoose";
 import cookieSession from "cookie-session";
 import { errorHandler, NotFoundError, currentUser } from "@fbticketss/common";
-
+import { OrderCancelledListener } from "./events/listeners/order-cancelled-listener";
+import { OrderCreatedListener } from "./events/listeners/order-created-listener";
 import { natsWrapper } from "./nats-wrapper";
+import { createChargeRouter } from "./routes/new";
 
 const app = express();
 app.set("trust proxy", true);
@@ -18,6 +20,8 @@ app.use(
 );
 
 app.use(currentUser); // mıddleweare ! payload yapmamızı saglar token'ının  jwt verify yaparak burda kullanmak mantıklı  app.use  cookieSession'dan sonra daha sonra router'ların orda require-auth mıddlewearını kullanrıız. fakat auth servıs ıcersınde currentUser routerında require-auth mıddlewearını kullanmayalım. hata dondurur null durumunda 401 dıye tıcketing.dev anasayfasında dondurmesını ıstemıyoruz. onun ıcın ordada currentuser mıddlewear var jwt verfıy var payload atayan currentuser'a onu index.ts 'De  kullandık. burdakı gıbı
+
+app.use(createChargeRouter);
 
 app.all("*", async (req, res) => {
   //
@@ -60,7 +64,8 @@ const start = async () => {
 
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
-
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
     await mongoose.connect(process.env.MONGO_URI);
     console.log("connect success to database");
   } catch (err) {
