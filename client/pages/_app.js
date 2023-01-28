@@ -8,18 +8,24 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
       <Header currentUser={currentUser} />
-      <Component {...pageProps} />;
+      <div className="container">
+        <Component currentUser={currentUser} {...pageProps} />;
+      </div>
     </div>
   );
 };
 AppComponent.getInitialProps = async (appContext) => {
-  const { data } = await buildClient(appContext.ctx).get(
-    "/api/users/currentuser"
-  );
+  const client = buildClient(appContext.ctx);
+  const { data } = await client.get("/api/users/currentuser");
+
   // eğer componentlerın ıcınde multople getInitialProps var ıse dıye kontrol etmelıyız onuda appContext.Component.getInitialProps bu sekılde anlarız cunku belkı sıgnın'de tanımlamadık onun ıcın hata cıkabılrı.
   let pageProps = {};
   if (appContext.Component.getInitialProps) {
-    pageProps = await appContext.Component.getInitialProps(appContext.ctx); // index.js 'De yazılan 2. getInitialProps da trıgger olması ıcın burda böyle yapıyoruz
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.currentUser
+    ); // index.js 'De yazılan 2. getInitialProps da trıgger olması ıcın burda böyle yapıyoruz. burdakı datayı onun altındakı component'e yollamıs oluyoruz
   }
 
   return {
