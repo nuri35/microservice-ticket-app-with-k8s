@@ -11,6 +11,8 @@ import {
 import { Order } from "../models/order";
 import { stripe } from "../stripe";
 import { Payment } from "../models/payment";
+import { PaymentCreatedPublisher } from "../events/publishers/payment-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -46,8 +48,14 @@ router.post(
     });
     await payment.save();
 
+    await new PaymentCreatedPublisher(natsWrapper.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
+    });
+
     // bir olayu yayacagız orderstatus payment dıcez ve expiratıon modulu  o ankı payment statuse gecen order'ı cancelled yapmıcak.  yanı order modulunde lıstener var expiration-complete dıye orda ıf ıle kontrol yapcak 1 dakıka sonra olay burya yayılcak ve burda eğer oncesınde status odendı olanları ıf kontrolu yaparak cancelled'a cekmıcek.
-    res.send({ success: true });
+    res.send({ success: true, id: payment.id });
   }
 );
 

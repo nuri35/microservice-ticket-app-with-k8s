@@ -20,6 +20,11 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     if (!order) {
       throw new Error("Order not found");
     }
+
+    if (order.status === OrderStatus.Complete) {
+      return msg.ack();
+    }
+
     order.set({
       // burda 1 dakıka sonra gelıyor lıstenera olay ama burda odemesını yapmıssa cancelled'a cekmıcez ??? yapılcak payment servıce'den sonra
       status: OrderStatus.Cancelled,
