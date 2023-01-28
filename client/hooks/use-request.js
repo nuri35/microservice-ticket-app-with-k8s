@@ -12,17 +12,17 @@ export default ({ url, method, body, onSuccess }) => {
     });
   };
 
-  const doRequest = async () => {
+  const doRequest = async (props = {}) => {
     try {
       //  axios[method] burası axios.post gıbı dusunebılrsın
-      const response = await axios[method](url, body);
+      const response = await axios[method](url, { ...body, ...props }); // orderId.js dekı  token={({ id }) => doRequest({ token: id })}  ıcın
       if (onSuccess) {
         onSuccess(response.data);
       }
 
       return response.data;
     } catch (error) {
-      if (error.response.status === 400) {
+      if (error.response?.status === 400) {
         msgFn("error", error.response.data.errors[0].message);
       }
     }

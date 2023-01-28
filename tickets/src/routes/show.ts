@@ -20,7 +20,9 @@ router.get("/api/tickets/:id", async (req: Request, res: Response) => {
 
 router.get("/api/tickets", async (req: Request, res: Response) => {
   try {
-    const ticket = await Ticket.find({});
+    const ticket = await Ticket.find({
+      orderId: undefined,
+    });
 
     res.send(ticket);
   } catch (err) {
