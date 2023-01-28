@@ -6,4 +6,5 @@ export enum Subject { // which channel
   OrderCancelled = "order:cancelled",
 
   ExpirationComplete = "expiration:complete",
+  PaymentCreated = "payment:created",
 }
