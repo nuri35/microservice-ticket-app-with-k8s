@@ -1,11 +1,35 @@
-const LandingPage = ({ currentUser }) => {
+const LandingPage = ({ currentUser, tickets }) => {
   // app.jsde component'E koyduk ordan ulaştık currentUser'a
   // axios.get("/api/users/currentuser"); // başında domaın kullanmassan tarayıcımız otomatıkman ticketing.dev/api seklınde kullanır
 
-  return currentUser ? (
-    <h1>You are signed In Hello </h1>
-  ) : (
-    <h1>You are Not signed in</h1>
+  const ticketList = tickets.map((ticket) => {
+    return (
+      <tr key={ticket.id}>
+        <td>{ticket.title}</td>
+        <td>{ticket.price}</td>
+        <td>
+          <Link href="/tickets/[ticketId]" as={`/tickets/${ticket.id}`}>
+            <a>View</a>
+          </Link>
+        </td>
+      </tr>
+    );
+  });
+
+  return (
+    <div>
+      <h1>Tickets</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>{ticketList}</tbody>
+      </table>
+    </div>
   );
 };
 // next js kullanıyoruz ve sayfa yuklendıgınde backend'den bılgı alıp html ıcıne koycaz next.js env'de oldugumuz ıcın ssr yapacagız.  bılıyoruzkı getInitialProps fonskıyonunda ıstek atıp yukadakı react compenent'ınde kullanırız fakat. bız ısteklerı vs use-request.js de hooks'da yapıyoruz bu hooks'da react compenentlerının ıcınde kullanılır. yanı yukardakı LandinPage fonksıyonu ıcınde.   fakat getInitialProps 'da bır compenent degıldir. o bir plane function'dır. bu yuzden use-request.js hooks'unu bir react component'ınde kullanabılrız.  ayrıca  ssr işlemlerınde bır compenent ıcersınde  axıos ile istek atıp verı getırmeye ızın verılmyıor yanı bızım yazdıgımzı hooks yapısındıa kullanamayız.. ıstegı atıp verı getırme ıslemlerını getInitialProps'da yapabilriiz. onun ıcın bu sayfada axios'u import edip kullanacagız use-request hooks yerıne. cunku use-request hooks plane functıon ıcerısınde kullanılmaz. .
