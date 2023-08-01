@@ -1,12 +1,14 @@
 export enum Subject { // which channel
-  TicketCreated = "ticket:created",
-  TicketUpdated = "ticket:updated",
+  TicketCreated = 'ticket:created',
+  TicketUpdated = 'ticket:updated',
 
-  SmsCreated = "sms:created",
+  SmsCreated = 'sms:created',
 
-  OrderCreated = "order:created",
-  OrderCancelled = "order:cancelled",
+  EmailCreated = 'email:created',
 
-  ExpirationComplete = "expiration:complete",
-  PaymentCreated = "payment:created",
+  OrderCreated = 'order:created',
+  OrderCancelled = 'order:cancelled',
+
+  ExpirationComplete = 'expiration:complete',
+  PaymentCreated = 'payment:created',
 }
